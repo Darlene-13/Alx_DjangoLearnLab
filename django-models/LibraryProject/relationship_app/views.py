@@ -3,6 +3,8 @@ from relationship_app.models import Author, Book, Library, Librarian
 from django.contrib.auth import login, logout, authenticate
 from .models import Library
 from django.views.generic.detail import DetailView
+from django.contrib.auth.models import User
+from django.http import HttpResponse
 
 # Function based views to list all books stored in the databas
 """View to list all books in the database.
@@ -26,3 +28,34 @@ class LibraryDetailView(DetailView):
         context['librarian'] = self.object.librarian
         return context
     
+# Login view
+def login_view(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return render(request, 'relationship_app/login_success.html', {'title': 'Login Successful'})
+        else:
+            return render(request, 'relationship_app/login.html', {'title': 'Login', 'error': 'Invalid credentials'})
+    return render(request, 'relationship_app/login.html', {'title': 'Login'})
+
+# Logout view
+def logout_view(request):
+    logout(request)
+    return render(request, 'relationship_app/logout.html', {'title': 'Logout'}  )
+
+# Register view
+def register_view(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        if User.objects.filter(username=username).exists():
+            return render(request, 'relationship_app/register.html', {'title': 'Register', 'error': 'Username already exists'})
+        user = User.objects.create_user(username=username, password=password)
+        login(request, user)
+        return render(request, 'relationship_app/register_success.html', {'title': 'Registration Successful'})
+    return render(request, 'relationship_app/register.html', {'title': 'Register'})
+
+
