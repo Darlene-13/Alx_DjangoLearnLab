@@ -1,10 +1,10 @@
 from django.shortcuts import render
 from django.views.generic import DetailView
-from .models import Author, Book, Library, Librarian
+from relationship_app.models import Author, Book, Library, Librarian
 from django.contrib.auth import login, logout, authenticate
-from django.http import HttpResponseRedirect
+from .models import Library
 
-# Function based views to list all books stored in the database
+# Function based views to list all books stored in the databas
 """View to list all books in the database.
 URL: /books/
 """
