@@ -4,9 +4,9 @@ from django.db.models import Q, Count
 from django.utils import timezone
 
 # Query all books for a specific author
-def get_books_by_author(author_name):
+def get_books_by_author(author):
     try:
-        author = Author.objects.get(name=author_name)
+        author = Book.objects.filter(author=author)
         return author.books.all()
     except Author.DoesNotExist:
         return []
@@ -20,9 +20,9 @@ def get_books_in_library(library_name):
         return []
     
 # Query the librarian of a specific library
-def get_librarian_of_library(library_name):
+def get_librarian_of_library(library):
     try:
-        library = Library.objects.get(name=library_name)
+        library = Library.objects.filter(library=library)
         return library.librarian
     except Library.DoesNotExist:
         return None
