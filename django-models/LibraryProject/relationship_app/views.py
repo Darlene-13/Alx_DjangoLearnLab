@@ -28,32 +28,39 @@ class LibraryDetailView(DetailView):
         return context
     
 # Login view
-def login_view(request):
-    if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-            return render(request, 'relationship_app/login_success.html', {'title': 'Login Successful'})
-        else:
-            return render(request, 'relationship_app/login.html', {'title': 'Login', 'error': 'Invalid credentials'})
-    return render(request, 'relationship_app/login.html', {'title': 'Login'})
+class LoginView(DetailView):
+    template_name = 'relationship_app/logout.html'
+    def login_view(request):
+        if request.method == 'POST':
+            username = request.POST['username']
+            password = request.POST['password']
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)
+                return render(request, 'relationship_app/template/relationship_app/login_success.html', {'title': 'Login Successful'})
+            else:
+                return render(request, 'relationship_app/template/relationship_app/login.html', {'title': 'Login', 'error': 'Invalid credentials'})
+        return render(request, 'relationship_app/template/relationship_app/login.html', {'title': 'Login'})
 
 # Logout view
-def logout_view(request):
-    logout(request)
-    return render(request, 'relationship_app/logout.html', {'title': 'Logout'}  )
+class LogoutView(DetailView):
+    template_name = 'relationship_app/templates/relationship_app/logout.html'
+
+    def logout_view(request):
+        logout(request)
+        return render(request, 'relationship_app/templates/relationship_app/logout.html', {'title': 'Logout'})
 
 # Register view
-def register_view(request):
-    if request.method == 'POST':
-        form = UserCreationForm(request.POST)  # Pass POST data to the form
-        if form.is_valid():  # Validate input
-            user = form.save()  # Create the user in the database
-            login(request, user)  # Log the user in after registration
-            return redirect('home')  # Redirect to home page or another view
-    else:
-        form = UserCreationForm()  # Empty form for GET request
-    
-    return render(request, 'relationship_app/register.html', {'form': form})
+class RegisterView(DetailView):
+    template_name = 'relationship_app/template/relationship_app/register.html'
+    def register_view(request):
+        if request.method == 'POST':
+            form = UserCreationForm(request.POST)  # Pass POST data to the form
+            if form.is_valid():  # Validate input
+                user = form.save()  # Create the user in the database
+                login(request, user)  # Log the user in after registration
+                return redirect('home')  # Redirect to home page or another view
+        else:
+            form = UserCreationForm()  # Empty form for GET request
+        
+        return render(request, 'relationship_app/register.html', {'form': form})
