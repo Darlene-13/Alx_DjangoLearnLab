@@ -1,8 +1,8 @@
 from django.shortcuts import render
-from django.views.generic import DetailView
 from relationship_app.models import Author, Book, Library, Librarian
 from django.contrib.auth import login, logout, authenticate
 from .models import Library
+from django.views.generic.detail import DetailView
 
 # Function based views to list all books stored in the databas
 """View to list all books in the database.
