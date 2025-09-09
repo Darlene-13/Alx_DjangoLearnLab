@@ -6,8 +6,8 @@ from django.utils import timezone
 # Query all books for a specific author
 def get_books_by_author(author):
     try:
-        author = Book.objects.filter(author=author)
-        return author.books.all()
+        author_name = Book.objects.filter(author=author)
+        return author_name.all()
     except Author.DoesNotExist:
         return []
     
@@ -29,8 +29,8 @@ def get_books_in_library(library_name):
 # Query the librarian of a specific library
 def get_librarian_of_library(library):
     try:
-        library = Library.objects.filter(library=library)
-        return library.librarian
+        librarian_name = Librarian.objects.get(library=library)
+        return librarian_name
     except Library.DoesNotExist:
         return None
     except Librarian.DoesNotExist:
