@@ -51,16 +51,14 @@ class LogoutView(DetailView):
         return render(request, 'relationship_app/templates/relationship_app/logout.html', {'title': 'Logout'})
 
 # Register view
-class RegisterView(DetailView):
-    template_name = 'relationship_app/template/relationship_app/register.html'
-    def register_view(request):
-        if request.method == 'POST':
-            form = UserCreationForm(request.POST)  # Pass POST data to the form
-            if form.is_valid():  # Validate input
-                user = form.save()  # Create the user in the database
-                login(request, user)  # Log the user in after registration
-                return redirect('home')  # Redirect to home page or another view
-        else:
-            form = UserCreationForm()  # Empty form for GET request
-        
-        return render(request, 'relationship_app/register.html', {'form': form})
+def register_view(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)  # Pass POST data to the form
+        if form.is_valid():  # Validate input
+            user = form.save()  # Create the user in the database
+            login(request, user)  # Log the user in after registration
+            return redirect('home')  # Redirect to home page or another view
+    else:
+        form = UserCreationForm()  # Empty form for GET request
+    
+    return render(request, 'relationship_app/register.html', {'form': form})
