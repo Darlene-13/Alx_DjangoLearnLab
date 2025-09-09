@@ -11,6 +11,13 @@ def get_books_by_author(author):
     except Author.DoesNotExist:
         return []
     
+def get_books_by_author_name(author_name):
+    try:
+        author = Author.objects.get(name=author_name)
+        return author.books.all()
+    except Author.DoesNotExist:
+        return []
+
 # Query all books in a specific library
 def get_books_in_library(library_name):
     try:
