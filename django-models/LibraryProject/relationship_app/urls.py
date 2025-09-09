@@ -11,7 +11,7 @@ from .views import list_books
 urlpatterns = [
     path('books/', views.list_books, name='list_books'),
     path('library/<int:pk>/', LibraryDetailView.as_view(), name='library_detail'),
-    path('login/', views.login_view, name='login'),https://savanna.alxafrica.com/dashboards/my_current_evaluation_quizzes
+    path('login/', views.login_view, name='login'),
     path('logout/', views.logout_view, name='logout'),
     path('register/', views.register_view, name='register'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
