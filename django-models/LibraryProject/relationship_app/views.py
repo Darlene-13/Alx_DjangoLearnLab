@@ -1,10 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from relationship_app.models import Author, Book, Library, Librarian
 from django.contrib.auth import login, logout, authenticate
 from .models import Library
 from django.views.generic.detail import DetailView
-from django.contrib.auth.models import User
-from django.http import HttpResponse
+from django.contrib.auth.forms import UserCreationForm
 
 # Function based views to list all books stored in the databas
 """View to list all books in the database.
@@ -49,13 +48,12 @@ def logout_view(request):
 # Register view
 def register_view(request):
     if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        if User.objects.filter(username=username).exists():
-            return render(request, 'relationship_app/register.html', {'title': 'Register', 'error': 'Username already exists'})
-        user = User.objects.create_user(username=username, password=password)
-        login(request, user)
-        return render(request, 'relationship_app/register_success.html', {'title': 'Registration Successful'})
-    return render(request, 'relationship_app/register.html', {'title': 'Register'})
-
-
+        form = UserCreationForm(request.POST)  # Pass POST data to the form
+        if form.is_valid():  # Validate input
+            user = form.save()  # Create the user in the database
+            login(request, user)  # Log the user in after registration
+            return redirect('home')  # Redirect to home page or another view
+    else:
+        form = UserCreationForm()  # Empty form for GET request
+    
+    return render(request, 'relationship_app/register.html', {'form': form})
