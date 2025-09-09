@@ -1,0 +1,57 @@
+# Create Operation
+
+```python
+# Create a new book instance
+from bookshelf.models import Book
+
+book = Book.objects.create(title="1984", author="George Orwell", publication_year=1949)
+print(book)
+
+
+
+
+# Retrieve Operation
+
+## Command:
+```python
+from bookshelf.models import Book  
+
+# Retrieve the book created earlier
+book = Book.objects.get(title="1984")  
+print(book.id, book.title, book.author, book.publication_year)
+
+
+
+# Update Operation
+
+## Command:
+```python
+from bookshelf.models import Book  
+
+# Retrieve the book
+book = Book.objects.get(title="1984")  
+
+# Update the title
+book.title = "Nineteen Eighty-Four"  
+book.save()  
+
+# Confirm the update
+print(book.id, book.title, book.author, book.publication_year)
+
+
+
+# Delete Operation
+
+## Command:
+```python
+from bookshelf.models import Book  
+
+# Retrieve the book
+book = Book.objects.get(title="Nineteen Eighty-Four")  
+
+# Delete the book
+book.delete()  
+
+# Confirm deletion by retrieving all books
+print(list(Book.objects.all()))
+
