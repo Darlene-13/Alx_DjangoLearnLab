@@ -62,7 +62,7 @@ TEMPLATES = [
         'DIRS': [
             os.path.join(BASE_DIR, 'relationship_app/templates'), #Points to the app folder
         ],
-        'APP_DIRS': False,
+        'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.request',

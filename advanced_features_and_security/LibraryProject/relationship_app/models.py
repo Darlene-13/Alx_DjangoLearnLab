@@ -3,7 +3,7 @@ from django.conf import settings
 # Create your models here.
 
 class UserProfile(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='profile', help_text="Link to the custom user profile")
+    user = models.OneToOneField('bookshelf.CustomUser', on_delete=models.CASCADE, related_name='profile', help_text="Link to the custom user profile")
     ROLE_CHOICES = [
         ('admin', 'Admin'),
         ('member', 'Member'),
