@@ -23,36 +23,23 @@ def is_librarian(user):
 def is_member(user):
     return user.is_authenticated and user.profile.role == 'member'
 
-
-# Role-based access control views
-@method_decorator(user_passes_test(is_admin, login_url='/login/'), name='dispatch')
-class AdminView(TemplateView):
-    template_name = 'relationship_app/templates/relationship_app/admin_view.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['title'] = 'Admin Dashboard'
-        return context
+# Admin view - accessible only to users with the 'admin' role
+@user_passes_test(is_admin, login_url='/login/')
+def admin_view(request):
+    return render(request, 'relationship_app/admin_view.html', {'title': 'Admin Dashboard'})
 
 
-@method_decorator(user_passes_test(is_librarian, login_url='/login/'), name='dispatch')
-class LibrarianView(TemplateView):
-    template_name = 'relationship_app/templates/relationship_app/librarian_view.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['title'] = 'Librarian Dashboard'
-        return context
+# Librarian view - accessible only to users with the 'librarian' role
+@user_passes_test(is_librarian, login_url='/login/')
+def librarian_view(request):
+    return render(request, 'relationship_app/librarian_view.html', {'title': 'Librarian Dashboard'})
 
 
-@method_decorator(user_passes_test(is_member, login_url='/login/'), name='dispatch')
-class MemberView(TemplateView):
-    template_name = 'relationship_app/templates/relationship_app/member_view.html'
+# Member view - accessible only to users with the 'member' role
+@user_passes_test(is_member, login_url='/login/')
+def member_view(request):
+    return render(request, 'relationship_app/member_view.html', {'title': 'Member Dashboard'})
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['title'] = 'Member Dashboard'
-        return context
 
 # Function based views to list all books stored in the database
 """View to list all books in the database.
@@ -86,18 +73,18 @@ class LoginView(DetailView):
             user = authenticate(request, username=username, password=password)
             if user is not None:
                 login(request, user)
-                return render(request, 'relationship_app/template/relationship_app/login_success.html', {'title': 'Login Successful'})
+                return render(request, 'relationship_app/login_success.html', {'title': 'Login Successful'})
             else:
-                return render(request, 'relationship_app/template/relationship_app/login.html', {'title': 'Login', 'error': 'Invalid credentials'})
-        return render(request, 'relationship_app/template/relationship_app/login.html', {'title': 'Login'})
+                return render(request, 'relationship_app/login.html', {'title': 'Login', 'error': 'Invalid credentials'})
+        return render(request, 'relationship_app/login.html', {'title': 'Login'})
 
 # Logout view
 class LogoutView(DetailView):
-    template_name = 'relationship_app/templates/relationship_app/logout.html'
+    template_name = 'relationship_app/logout.html'
 
     def logout_view(request):
         logout(request)
-        return render(request, 'relationship_app/templates/relationship_app/logout.html', {'title': 'Logout'})
+        return render(request, 'relationship_app/logout.html', {'title': 'Logout'})
 
 # Register view
 def register_view(request):
@@ -133,7 +120,7 @@ def add_book(request):
         author = request.POST.get('author')
         Book.objects.create(title=title, author=author)
         return HttpResponse("Book added successfully!")
-    return render(request, 'relationship_app/templates/relationship_app/add_book.html')
+    return render(request, 'relationship_app/add_book.html')
 
 
 # Edit Book
@@ -145,7 +132,7 @@ def edit_book(request, book_id):
         book.author = request.POST.get('author')
         book.save()
         return HttpResponse("Book updated successfully!")
-    return render(request, 'relationship_app/templates/relationship_app/edit_book.html', {'book': book})
+    return render(request, 'relationship_app/edit_book.html', {'book': book})
 
 
 # Delete Book
@@ -155,4 +142,4 @@ def delete_book(request, book_id):
     if request.method == "POST":
         book.delete()
         return HttpResponse("Book deleted successfully!")
-    return render(request, 'relationship_app/templates/relationship_app/delete_book.html', {'book': book})
+    return render(request, 'relationship_app/delete_book.html', {'book': book})
