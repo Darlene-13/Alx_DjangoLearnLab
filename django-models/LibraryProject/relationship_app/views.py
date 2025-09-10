@@ -4,6 +4,8 @@ from django.contrib.auth import login, logout, authenticate
 from .models import Library
 from django.views.generic.detail import DetailView
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.decorators import user_passes_test
+from django.http import HttpResponse
 
 # Function based views to list all books stored in the databas
 """View to list all books in the database.
@@ -62,3 +64,28 @@ def register_view(request):
         form = UserCreationForm()  # Empty form for GET request
     
     return render(request, 'relationship_app/register.html', {'form': form})
+
+# Custom check functions
+def is_admin(user):
+    return user.is_authenticated and user.profile.role == 'admin'
+
+def is_librarian(user):
+    return user.is_authenticated and user.profile.role == 'librarian'
+
+def is_member(user):
+    return user.is_authenticated and user.profile.role == 'member'
+
+# Admin view
+@user_passes_test(is_admin, login_url='/login/')
+def admin_view(request):
+    return HttpResponse("Admin Dashboard")
+
+# Librarian view
+@user_passes_test(is_librarian, login_url='/login/')
+def librarian_view(request):
+    return HttpResponse("Librarian Dashboard")
+
+# Member view
+@user_passes_test(is_member, login_url='/login/')
+def member_view(request):
+    return HttpResponse("Member Dashboard")

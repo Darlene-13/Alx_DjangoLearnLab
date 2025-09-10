@@ -1,6 +1,24 @@
 from django.db import models
 
 # Create your models here.
+
+class UserProfile(models.Model):
+    user = models.OneToOneField('auth.User', on_delete=models.CASCADE, related_name='profile', help_text="Select the user")
+    ROLE_CHOICES = [
+        ('admin', 'Admin'),
+        ('member', 'Member'),
+        ('librarian', 'Librarian'),
+    ]
+    role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='member', help_text="Select the user role")
+    def __str__(self):
+        return f"{self.user.username} - {self.role}"
+    
+    class Meta:
+        db_table = "relationship_app_userprofile"
+        ordering = ['user__username']
+        verbose_name = "User Profile"
+        verbose_name_plural = "User Profiles"
+
 class Author(models.Model):
     name = models.CharField(max_length=100, help_text="Enter the author's name")
     birth_date = models.DateField(help_text="Enter the author's birth date")
@@ -53,3 +71,4 @@ class Librarian(models.Model):
         ordering = ['name']
         verbose_name = "Librarian"
         verbose_name_plural = "Librarians"
+
