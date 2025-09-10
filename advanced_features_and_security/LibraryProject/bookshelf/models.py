@@ -1,5 +1,6 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser, UserManager
+from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.base_user import BaseUserManager
 
 # Create your models here.
 
@@ -27,7 +28,7 @@ class CustomUser(AbstractUser):
     date_of_birth = models.DateField(null=True, blank=True, help_text="Enter the user's date of birth")
     profile_photo = models.ImageField(upload_to='profile_photos/', null=True, blank=True, help_text="Upload a profile photo")
 
-    objects = UserManager()
+    objects = BaseUserManager()
 
     def __str__(self):
         return f"{self.username} - {self.role}"
@@ -38,7 +39,7 @@ class CustomUser(AbstractUser):
         verbose_name = "Custom User"
         verbose_name_plural = "Custom Users"
 
-class CustomUserManager(UserManager):
+class CustomUserManager(BaseUserManager):
     def create_user(self, username, email=None, password=None, **extra_fields):
         if not username:
             raise ValueError('The Username must be set')
