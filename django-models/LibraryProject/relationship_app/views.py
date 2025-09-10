@@ -8,8 +8,12 @@ from django.contrib.auth.decorators import user_passes_test
 from django.http import HttpResponse
 from django.views.generic import TemplateView
 from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import permission_required
+from django.shortcuts import render, get_object_or_404, redirect
 
-# Role checks.py
+
+
+# Role check functions
 def is_admin(user):
     return user.is_authenticated and user.profile.role == 'admin'
 
@@ -118,3 +122,37 @@ def is_librarian(user):
 def is_member(user):
     return user.is_authenticated and user.profile.role == 'member'
 
+
+# Permissions
+
+# Add Book
+@permission_required('relationship_app.can_add_book', login_url='/login/')
+def add_book(request):
+    if request.method == "POST":
+        title = request.POST.get('title')
+        author = request.POST.get('author')
+        Book.objects.create(title=title, author=author)
+        return HttpResponse("Book added successfully!")
+    return render(request, 'relationship_app/templates/relationship_app/add_book.html')
+
+
+# Edit Book
+@permission_required('relationship_app.can_change_book', login_url='/login/')
+def edit_book(request, book_id):
+    book = get_object_or_404(Book, id=book_id)
+    if request.method == "POST":
+        book.title = request.POST.get('title')
+        book.author = request.POST.get('author')
+        book.save()
+        return HttpResponse("Book updated successfully!")
+    return render(request, 'relationship_app/templates/relationship_app/edit_book.html', {'book': book})
+
+
+# Delete Book
+@permission_required('relationship_app.can_delete_book', login_url='/login/')
+def delete_book(request, book_id):
+    book = get_object_or_404(Book, id=book_id)
+    if request.method == "POST":
+        book.delete()
+        return HttpResponse("Book deleted successfully!")
+    return render(request, 'relationship_app/templates/relationship_app/delete_book.html', {'book': book})

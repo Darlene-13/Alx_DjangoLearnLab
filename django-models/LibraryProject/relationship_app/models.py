@@ -45,6 +45,14 @@ class Book(models.Model):
         ordering = ['title']
         verbose_name = "Book"
         verbose_name_plural = "Books"
+        permissions = [
+            ("can_add_book", "Can add book"),
+            ("can_change_book", "Can change book"),
+            ("can_delete_book", "Can delete book"),
+            ("can_view_book", "Can view book"),
+        ]
+
+
 
 class Library(models.Model):
     name = models.CharField(max_length=200, help_text="Enter the library name")
