@@ -24,9 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-!(6rnn_=g4)+9z(rv$!e4oz*^#nt0!jk_$1b#48f^*#fl-h@q3'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['http://127.0.0.1:8003/', 'localhost']
 AUTH_USER_MODEL = 'bookshelf.CustomUser'  # Using custom User model
 
 # Application definition
@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     # Local apps
     'bookshelf',
     'relationship_app',
+    'csp',
 ]
 
 MIDDLEWARE = [
@@ -52,8 +53,15 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'csp.middleware.CSPMiddleware',  # Content Security Policy Middleware
 ]
 
+
+# CSP Rules
+CSP_DEFAULT_SRC = ("'self'",)
+CSP_SCRIPT_SRC = ("'self'", 'cdn.jsdelivr.net')  # Example if using a CDN
+CSP_STYLE_SRC = ("'self'", 'fonts.googleapis.com')
+CSP_FONT_SRC = ("'self'", 'fonts.gstatic.com')
 ROOT_URLCONF = 'LibraryProject.urls'
 
 TEMPLATES = [
@@ -127,3 +135,18 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Browser Security Headers
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+X_FRAME_OPTIONS = 'DENY'
+
+# HTTPS Settings
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+SECURE_SSL_REDIRECT = True  # Forces HTTPS in production
+
+# HSTS (Strict Transport Security)
+SECURE_HSTS_SECONDS = 31536000  # 1 year
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True

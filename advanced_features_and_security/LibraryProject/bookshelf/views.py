@@ -1,9 +1,10 @@
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import SuspiciousOperation
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import DetailView, ListView
 from django.contrib.auth.decorators import permission_required
 from django.utils.decorators import method_decorator
 from django.contrib.auth import get_user_model
+
 
 from .models import Book  # Relative import for your app models
 
@@ -88,3 +89,12 @@ class CustomUserDetailView(DetailView):
 
     def get_date_of_birth(self):
         return getattr(self.object, 'date_of_birth', None)
+
+
+def search_books(request):
+    query = request.GET.get('q', '')
+    if not query.isalnum():  # Simple input validation
+        raise SuspiciousOperation("Invalid search query")
+
+    books = Book.objects.filter(title__icontains=query)
+    return render(request, 'bookshelf/search_results.html', {'books': books})
