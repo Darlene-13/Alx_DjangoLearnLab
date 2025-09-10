@@ -17,8 +17,8 @@ urlpatterns = [
     path('admin-dashboard/', views.admin_view, name='admin_dashboard'),
     path('librarian-dashboard/', views.librarian_view, name='librarian_dashboard'),
     path('member-dashboard/', views.member_view, name='member_dashboard'),
-    path('add-book/', views.add_book, name='add_book'),
-    path('edit-book/<int:pk>/', views.edit_book, name='edit_book'),
-    path('delete-book/<int:pk>/', views.delete_book, name='delete_book'),
+    path('add_book/', views.add_book, name='add_book'),
+    path('edit_book/<int:pk>/', views.edit_book, name='edit_book'),
+    path('delete_book/<int:pk>/', views.delete_book, name='delete_book'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
