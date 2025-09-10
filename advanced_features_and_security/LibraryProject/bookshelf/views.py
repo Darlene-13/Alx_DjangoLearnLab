@@ -4,6 +4,8 @@ from django.views.generic import DetailView, ListView
 from django.contrib.auth.decorators import permission_required
 from django.utils.decorators import method_decorator
 from django.contrib.auth import get_user_model
+from .forms import ExampleForm
+
 
 
 from .models import Book  # Relative import for your app models
@@ -98,3 +100,14 @@ def search_books(request):
 
     books = Book.objects.filter(title__icontains=query)
     return render(request, 'bookshelf/search_results.html', {'books': books})
+
+
+def example_form_view(request):
+    if request.method == 'POST':
+        form = ExampleForm(request.POST)
+        if form.is_valid():
+            # Process form data
+            return render(request, 'bookshelf/form_success.html', {'form': form})
+    else:
+        form = ExampleForm()
+    return render(request, 'bookshelf/form_example.html', {'form': form})
